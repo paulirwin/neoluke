@@ -1,0 +1,56 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NeoLuke.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="600"
+        x:Class="NeoLuke.Views.Dialogs.ThirdPartyNoticesDialog"
+        x:DataType="vm:ThirdPartyNoticesDialogViewModel"
+        Title="Third-Party Notices"
+        Width="700"
+        Height="600"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True">
+
+    <Design.DataContext>
+        <vm:ThirdPartyNoticesDialogViewModel/>
+    </Design.DataContext>
+
+    <DockPanel Margin="20">
+        <!-- Header -->
+        <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,20">
+            <TextBlock Text="Third-Party Notices"
+                      FontSize="20"
+                      FontWeight="Bold"/>
+            <TextBlock Text="This application uses the following open source libraries and components."
+                      TextWrapping="Wrap"
+                      Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+        </StackPanel>
+
+        <!-- Close button -->
+        <Button DockPanel.Dock="Bottom"
+                Content="Close"
+                HorizontalAlignment="Right"
+                Margin="0,20,0,0"
+                Click="OnCloseClick"/>
+
+        <!-- Notices content -->
+        <Border BorderThickness="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                CornerRadius="4">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                         VerticalScrollBarVisibility="Auto">
+                <TextBox Text="{Binding NoticesText}"
+                        IsReadOnly="True"
+                        BorderThickness="0"
+                        Background="Transparent"
+                        FontFamily="Courier New,Consolas,monospace"
+                        FontSize="12"
+                        Padding="10"
+                        TextWrapping="NoWrap"
+                        AcceptsReturn="True"/>
+            </ScrollViewer>
+        </Border>
+    </DockPanel>
+
+</Window>

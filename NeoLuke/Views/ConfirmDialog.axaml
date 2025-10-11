@@ -1,0 +1,65 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NeoLuke.Views.ConfirmDialog"
+        Title="Confirm"
+        Width="450"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <StackPanel Margin="0">
+        <!-- Header with colored background -->
+        <Border Background="#FF9800"
+                Padding="20,15">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <!-- Warning icon -->
+                <Border Width="32"
+                        Height="32"
+                        CornerRadius="16"
+                        Background="White">
+                    <TextBlock Text="?"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="#FF9800"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Border>
+
+                <TextBlock Text="Confirm Action"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Foreground="White"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Message content -->
+        <StackPanel Margin="25,20" Spacing="20">
+            <TextBlock x:Name="MessageText"
+                       TextWrapping="Wrap"
+                       FontSize="14"/>
+        </StackPanel>
+
+        <!-- Button panel -->
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="10"
+                    Margin="25,0,25,20">
+            <Button x:Name="CancelButton"
+                    Content="Cancel"
+                    Width="100"
+                    Height="32"
+                    FontWeight="SemiBold"
+                    Click="OnCancelClick"/>
+
+            <Button x:Name="ConfirmButton"
+                    Content="Confirm"
+                    Width="100"
+                    Height="32"
+                    Background="#FF9800"
+                    Foreground="White"
+                    FontWeight="SemiBold"
+                    Click="OnConfirmClick"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

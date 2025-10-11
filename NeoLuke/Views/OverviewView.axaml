@@ -1,0 +1,268 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NeoLuke.ViewModels"
+             xmlns:models="using:NeoLuke.Models.Overview"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="NeoLuke.Views.OverviewView"
+             x:DataType="vm:OverviewViewModel">
+
+    <Design.DataContext>
+        <vm:OverviewViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*" Margin="40,20,20,20" RowSpacing="20">
+
+        <!-- Index Information Section -->
+        <Border Grid.Row="0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="15">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="Auto,*">
+
+                    <!-- Index Path -->
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                               Text="Index Path:"
+                               FontWeight="SemiBold"
+                               Margin="0,5,15,5"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1"
+                               Text="{Binding IndexPath}"
+                               Margin="0,5"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap"
+                               ToolTip.Tip="{Binding IndexPath}"/>
+
+                    <!-- Number of Fields -->
+                    <TextBlock Grid.Row="1" Grid.Column="0"
+                               Text="Number of Fields:"
+                               FontWeight="SemiBold"
+                               Margin="0,5,15,5"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1"
+                               Text="{Binding NumFields}"
+                               Margin="0,5"
+                               VerticalAlignment="Center"/>
+
+                    <!-- Number of Documents -->
+                    <TextBlock Grid.Row="2" Grid.Column="0"
+                               Text="Number of Documents:"
+                               FontWeight="SemiBold"
+                               Margin="0,5,15,5"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1"
+                               Text="{Binding NumDocuments}"
+                               Margin="0,5"
+                               VerticalAlignment="Center"/>
+
+                    <!-- Number of Terms -->
+                    <TextBlock Grid.Row="3" Grid.Column="0"
+                               Text="Number of Terms:"
+                               FontWeight="SemiBold"
+                               Margin="0,5,15,5"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1"
+                               Text="{Binding NumTerms}"
+                               Margin="0,5"
+                               VerticalAlignment="Center"/>
+
+                    <!-- Deletions / Optimized -->
+                    <TextBlock Grid.Row="4" Grid.Column="0"
+                               Text="Deletions / Optimized:"
+                               FontWeight="SemiBold"
+                               Margin="0,5,15,5"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1"
+                               Text="{Binding DeletionsOptimized}"
+                               Margin="0,5"
+                               VerticalAlignment="Center"/>
+
+                    <!-- Index Version -->
+                    <TextBlock Grid.Row="5" Grid.Column="0"
+                               Text="Index Version:"
+                               FontWeight="SemiBold"
+                               Margin="0,5,15,5"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="5" Grid.Column="1"
+                               Text="{Binding IndexVersion}"
+                               Margin="0,5"
+                               VerticalAlignment="Center"/>
+
+                    <!-- Index Format -->
+                    <TextBlock Grid.Row="6" Grid.Column="0"
+                               Text="Index Format:"
+                               FontWeight="SemiBold"
+                               Margin="0,5,15,5"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="6" Grid.Column="1"
+                               Text="{Binding IndexFormat}"
+                               Margin="0,5"
+                               VerticalAlignment="Center"/>
+
+                    <!-- Directory Implementation -->
+                    <TextBlock Grid.Row="7" Grid.Column="0"
+                               Text="Directory Implementation:"
+                               FontWeight="SemiBold"
+                               Margin="0,5,15,5"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="7" Grid.Column="1"
+                               Text="{Binding DirectoryImpl}"
+                               Margin="0,5"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap"/>
+
+                    <!-- Commit Point -->
+                    <TextBlock Grid.Row="8" Grid.Column="0"
+                               Text="Commit Point:"
+                               FontWeight="SemiBold"
+                               Margin="0,5,15,5"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="8" Grid.Column="1"
+                               Text="{Binding CommitPoint}"
+                               Margin="0,5"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap"/>
+
+                    <!-- Commit User Data -->
+                    <TextBlock Grid.Row="9" Grid.Column="0"
+                               Text="Commit User Data:"
+                               FontWeight="SemiBold"
+                               Margin="0,5,15,5"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="9" Grid.Column="1"
+                               Text="{Binding CommitUserData}"
+                               Margin="0,5"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap"/>
+                </Grid>
+        </Border>
+
+        <!-- Two-column layout for Available Fields and Top Terms -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="20">
+                <!-- Available Fields Section -->
+                <Border Grid.Column="0"
+                        BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="15">
+                    <Grid RowDefinitions="Auto,*">
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                            <TextBlock Text="Available Fields"
+                                       FontWeight="SemiBold"
+                                       FontSize="14"/>
+                            <TextBlock Text="{Binding FieldStats.Count, StringFormat='({0} fields)'}"
+                                       FontSize="12"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                        </StackPanel>
+
+                        <DataGrid Grid.Row="1"
+                                  ItemsSource="{Binding FieldStats}"
+                                  SelectedItem="{Binding SelectedField}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  GridLinesVisibility="Horizontal"
+                                  HeadersVisibility="Column"
+                                  CanUserResizeColumns="True"
+                                  CanUserSortColumns="False"
+                                  SelectionMode="Single"
+                                  x:CompileBindings="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Field"
+                                                    Binding="{Binding FieldName}"
+                                                    Width="2*"
+                                                    MinWidth="120"/>
+                                <DataGridTextColumn Header="Terms"
+                                                    Binding="{Binding TermCount, StringFormat=N0}"
+                                                    Width="*"
+                                                    MinWidth="70"/>
+                                <DataGridTextColumn Header="%"
+                                                    Binding="{Binding Percentage, StringFormat='{}{0:F2}%'}"
+                                                    Width="*"
+                                                    MinWidth="70"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+
+                <!-- Top Terms Section -->
+                <Border Grid.Column="1"
+                        BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="15">
+                    <Grid RowDefinitions="Auto,Auto,*">
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                            <TextBlock Text="Top ranking terms"
+                                       FontWeight="SemiBold"
+                                       FontSize="14"/>
+                            <TextBlock Text="{Binding TopTerms.Count, StringFormat='({0} terms)'}"
+                                       FontSize="12"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                            <TextBlock Text="Max terms:"
+                                       VerticalAlignment="Center"/>
+                            <NumericUpDown Value="{Binding MaxTerms}"
+                                           Minimum="1"
+                                           Maximum="1000"
+                                           Width="120"
+                                           x:CompileBindings="False"/>
+                        </StackPanel>
+
+                        <Border Grid.Row="2"
+                                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="5">
+                            <Panel>
+                                <!-- Show message when no field is selected -->
+                                <TextBlock Text="Select a field to see top terms"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontStyle="Italic"
+                                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                           IsVisible="{Binding SelectedField, Converter={x:Static ObjectConverters.IsNull}}"/>
+
+                                <!-- Show DataGrid when field is selected -->
+                                <DataGrid ItemsSource="{Binding TopTerms}"
+                                          SelectedItem="{Binding SelectedTerm}"
+                                          AutoGenerateColumns="False"
+                                          IsReadOnly="True"
+                                          GridLinesVisibility="Horizontal"
+                                          HeadersVisibility="Column"
+                                          CanUserResizeColumns="True"
+                                          CanUserSortColumns="False"
+                                          SelectionMode="Single"
+                                          IsVisible="{Binding SelectedField, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          x:CompileBindings="False">
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Search docs by this term" Command="{Binding SearchByTermCommand}"/>
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Term"
+                                                            Binding="{Binding Term}"
+                                                            Width="2*"
+                                                            MinWidth="150"/>
+                                        <DataGridTextColumn Header="Frequency"
+                                                            Binding="{Binding Frequency, StringFormat=N0}"
+                                                            Width="*"
+                                                            MinWidth="80"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Panel>
+                        </Border>
+                    </Grid>
+                </Border>
+        </Grid>
+
+    </Grid>
+
+</UserControl>

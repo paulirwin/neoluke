@@ -1,0 +1,225 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NeoLuke.ViewModels"
+             xmlns:models="using:NeoLuke.Models.Search"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="NeoLuke.Views.SearchView"
+             x:DataType="vm:SearchViewModel">
+
+    <Design.DataContext>
+        <vm:SearchViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,5,*" Margin="20">
+
+        <!-- Query Settings Section (Top Pane) -->
+        <Border Grid.Row="0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15"
+                MinHeight="150">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                <!-- Analyzer, Query Parser, Default Field Selection, and Settings Button -->
+                <WrapPanel Grid.Row="0" Orientation="Horizontal">
+                    <!-- Analyzer -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
+                        <TextBlock Text="Analyzer:"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,10,0"/>
+                        <ComboBox ItemsSource="{Binding AnalyzerNames}"
+                                 SelectedItem="{Binding SelectedAnalyzer}"
+                                 MinWidth="180"
+                                 Width="180"/>
+                    </StackPanel>
+
+                    <!-- Query Parser -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
+                        <TextBlock Text="Query parser:"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,10,0"/>
+                        <ComboBox ItemsSource="{Binding ParserTypes}"
+                                 SelectedItem="{Binding SelectedParserType}"
+                                 MinWidth="120"
+                                 Width="120"/>
+                    </StackPanel>
+
+                    <!-- Default Field -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
+                        <TextBlock Text="Default field:"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,10,0"/>
+                        <ComboBox ItemsSource="{Binding FieldNames}"
+                                 SelectedItem="{Binding SelectedField}"
+                                 MinWidth="180"
+                                 Width="180"/>
+                    </StackPanel>
+
+                    <!-- Advanced Settings Button -->
+                    <Button Content="Settings..."
+                            Command="{Binding OpenSettingsCommand}"
+                            VerticalAlignment="Center"
+                            Padding="15,6"
+                            ToolTip.Tip="Open advanced search settings"/>
+                </WrapPanel>
+
+                <!-- Query Expression -->
+                <Grid Grid.Row="1" ColumnDefinitions="120,*" ColumnSpacing="10">
+                    <TextBlock Grid.Column="0"
+                              Text="Query expression:"
+                              VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1"
+                            Text="{Binding QueryExpression}"
+                            Watermark="Enter query expression..."
+                            IsEnabled="{Binding IsIndexLoaded}"/>
+                </Grid>
+
+                <!-- Parsed Query (Read-only) -->
+                <Grid Grid.Row="2" ColumnDefinitions="120,*" ColumnSpacing="10">
+                    <TextBlock Grid.Column="0"
+                              Text="Parsed query:"
+                              VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1"
+                            Text="{Binding ParsedQuery}"
+                            IsReadOnly="True"
+                            Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                            FontStyle="Italic"/>
+                </Grid>
+
+                <!-- Search Button and Progress -->
+                <Grid Grid.Row="3" ColumnDefinitions="120,Auto,Auto,Auto" ColumnSpacing="10">
+                    <Button Grid.Column="1"
+                           Content="Search"
+                           Command="{Binding SearchCommand}"
+                           Padding="20,8"
+                           IsEnabled="{Binding !IsSearching}"/>
+                    <ProgressBar Grid.Column="2"
+                                IsIndeterminate="True"
+                                Width="150"
+                                Height="8"
+                                IsVisible="{Binding IsSearching}"
+                                VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="3"
+                              Text="Searching..."
+                              VerticalAlignment="Center"
+                              IsVisible="{Binding IsSearching}"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Splitter -->
+        <GridSplitter Grid.Row="1"
+                      ResizeDirection="Rows"
+                      Background="Transparent"
+                      HorizontalAlignment="Stretch"/>
+
+        <!-- Search Results Section (Bottom Pane) -->
+        <Border Grid.Row="2"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15">
+            <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+                <!-- Section Header -->
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0"
+                              Text="Search Results"
+                              FontWeight="SemiBold"
+                              FontSize="14"/>
+                    <TextBlock Grid.Column="1"
+                              Text="{Binding PageInfoText}"
+                              VerticalAlignment="Center"
+                              Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                </Grid>
+
+                <!-- Results DataGrid -->
+                <Panel Grid.Row="1">
+                    <!-- Show message when no index is loaded -->
+                    <TextBlock Text="Open an index to search"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontStyle="Italic"
+                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                               IsVisible="{Binding !IsIndexLoaded}"/>
+
+                    <!-- Show DataGrid when index is loaded -->
+                    <DataGrid ItemsSource="{Binding SearchResults}"
+                              SelectedItem="{Binding SelectedResult}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column"
+                              CanUserResizeColumns="True"
+                              CanUserSortColumns="False"
+                              SelectionMode="Single"
+                              IsVisible="{Binding IsIndexLoaded}">
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Explain" Command="{Binding ExplainCommand}"/>
+                                <MenuItem Header="Show all fields" Command="{Binding ShowAllFieldsCommand}"/>
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Doc ID"
+                                                Binding="{Binding DocId}"
+                                                Width="*"
+                                                MinWidth="80"/>
+                            <DataGridTextColumn Header="Score"
+                                                Binding="{Binding Score, StringFormat='{}{0:F4}'}"
+                                                Width="*"
+                                                MinWidth="100"/>
+                            <DataGridTextColumn Header="Field Values"
+                                                Binding="{Binding FieldValues}"
+                                                Width="3*"
+                                                MinWidth="300"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Panel>
+
+                <!-- Paging Controls -->
+                <StackPanel Grid.Row="2"
+                           Orientation="Horizontal"
+                           Spacing="10"
+                           HorizontalAlignment="Center"
+                           Margin="0,10,0,0">
+                    <!-- First Page Button -->
+                    <Button Content="⏮"
+                            Command="{Binding FirstPageCommand}"
+                            ToolTip.Tip="First page"
+                            Width="36"
+                            Height="32"/>
+
+                    <!-- Previous Page Button -->
+                    <Button Content="◀"
+                            Command="{Binding PreviousPageCommand}"
+                            ToolTip.Tip="Previous page"
+                            Width="36"
+                            Height="32"/>
+
+                    <!-- Page Number Display -->
+                    <TextBlock Text="{Binding PageInfoText}"
+                               VerticalAlignment="Center"
+                               Margin="10,0"/>
+
+                    <!-- Next Page Button -->
+                    <Button Content="▶"
+                            Command="{Binding NextPageCommand}"
+                            ToolTip.Tip="Next page"
+                            Width="36"
+                            Height="32"/>
+
+                    <!-- Last Page Button -->
+                    <Button Content="⏭"
+                            Command="{Binding LastPageCommand}"
+                            ToolTip.Tip="Last page"
+                            Width="36"
+                            Height="32"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</UserControl>

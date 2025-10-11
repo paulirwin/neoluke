@@ -1,0 +1,141 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
+        x:Class="NeoLuke.Views.LogDetailsDialog"
+        Title="Log Entry Details"
+        Width="700"
+        Height="500"
+        MinWidth="500"
+        MinHeight="300"
+        WindowStartupLocation="CenterOwner"
+        Icon="/Assets/avalonia-logo.ico">
+
+    <Grid RowDefinitions="*,Auto" Margin="20" RowSpacing="15">
+
+        <!-- Details Section -->
+        <ScrollViewer Grid.Row="0">
+            <StackPanel Spacing="15">
+
+                <!-- Timestamp -->
+                <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="10">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Timestamp"
+                                   FontWeight="SemiBold"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                        <TextBlock x:Name="TimestampText"
+                                   FontSize="14"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Log Level -->
+                <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="10">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Log Level"
+                                   FontWeight="SemiBold"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                        <TextBlock x:Name="LogLevelText"
+                                   FontSize="14"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Category -->
+                <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="10">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Category"
+                                   FontWeight="SemiBold"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                        <TextBlock x:Name="CategoryText"
+                                   FontSize="14"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Message -->
+                <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="10">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Message"
+                                   FontWeight="SemiBold"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                        <ScrollViewer MaxHeight="300"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled">
+                            <TextBox x:Name="MessageText"
+                                     FontSize="14"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     IsReadOnly="True"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     Padding="0"
+                                     MinHeight="60"/>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Border>
+
+                <!-- Exception (only visible if exception exists) -->
+                <Border x:Name="ExceptionBorder"
+                        BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="10"
+                        IsVisible="False">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Exception"
+                                   FontWeight="SemiBold"
+                                   FontSize="12"
+                                   Foreground="#D32F2F"/>
+                        <ScrollViewer MaxHeight="200">
+                            <TextBlock x:Name="ExceptionText"
+                                       FontSize="12"
+                                       FontFamily="Courier New"
+                                       TextWrapping="Wrap"
+                                       Foreground="#D32F2F"/>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Button Panel -->
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="0,15,0,0">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="10">
+                <Button x:Name="CopyButton"
+                        Content="Copy to Clipboard"
+                        Padding="15,8"
+                        Click="OnCopyClick"/>
+                <Button x:Name="CloseButton"
+                        Content="Close"
+                        Padding="15,8"
+                        Click="OnCloseClick"/>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+
+</Window>

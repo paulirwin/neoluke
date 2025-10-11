@@ -1,0 +1,135 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NeoLuke.ViewModels"
+             xmlns:models="using:NeoLuke.Models.Analysis"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="NeoLuke.Views.AnalysisView"
+             x:DataType="vm:AnalysisViewModel">
+
+    <Design.DataContext>
+        <vm:AnalysisViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,5,*" Margin="20">
+
+        <!-- Analyzer Settings Section (Top Pane) -->
+        <Border Grid.Row="0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                <!-- Analyzer Selection -->
+                <Grid Grid.Row="0" ColumnDefinitions="120,*" ColumnSpacing="10">
+                    <TextBlock Grid.Column="0"
+                              Text="Analyzer:"
+                              VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1"
+                             ItemsSource="{Binding AnalyzerTypes}"
+                             SelectedItem="{Binding SelectedAnalyzer}"
+                             MinWidth="300"
+                             HorizontalAlignment="Left">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding SimpleName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </Grid>
+
+                <!-- Input Text -->
+                <Grid Grid.Row="1" ColumnDefinitions="120,*" ColumnSpacing="10">
+                    <TextBlock Grid.Column="0"
+                              Text="Input text:"
+                              VerticalAlignment="Top"
+                              Margin="0,5,0,0"/>
+                    <TextBox Grid.Column="1"
+                            Text="{Binding InputText}"
+                            Watermark="Enter text to analyze..."
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            MinHeight="100"
+                            MaxHeight="200"
+                            VerticalAlignment="Stretch"/>
+                </Grid>
+
+                <!-- Test Button and Status -->
+                <Grid Grid.Row="2" ColumnDefinitions="120,*" ColumnSpacing="10">
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                        <Button Content="Test Analyzer"
+                               Command="{Binding TestAnalyzerCommand}"
+                               Padding="20,8"
+                               IsEnabled="{Binding !IsAnalyzing}"/>
+                        <ProgressBar IsIndeterminate="True"
+                                    Width="150"
+                                    Height="8"
+                                    IsVisible="{Binding IsAnalyzing}"
+                                    VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding StatusMessage}"
+                                  VerticalAlignment="Center"
+                                  Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Splitter -->
+        <GridSplitter Grid.Row="1"
+                      ResizeDirection="Rows"
+                      Background="Transparent"
+                      HorizontalAlignment="Stretch"/>
+
+        <!-- Results Section (Bottom Pane) -->
+        <Border Grid.Row="2"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15">
+            <Grid RowDefinitions="Auto,*" RowSpacing="10">
+                <!-- Section Header -->
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0"
+                              Text="Analysis Results"
+                              FontWeight="SemiBold"
+                              FontSize="14"/>
+                    <TextBlock Grid.Column="1"
+                              Text="{Binding AnalyzedTokens.Count, StringFormat='{}{0} token(s)'}"
+                              VerticalAlignment="Center"
+                              Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                </Grid>
+
+                <!-- Results DataGrid -->
+                <DataGrid Grid.Row="1"
+                          ItemsSource="{Binding AnalyzedTokens}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          GridLinesVisibility="Horizontal"
+                          HeadersVisibility="Column"
+                          CanUserResizeColumns="True"
+                          CanUserSortColumns="False"
+                          SelectionMode="Single"
+                          DoubleTapped="DataGrid_DoubleTapped">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Details" Click="DetailsMenuItem_Click"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Term"
+                                            Binding="{Binding Term}"
+                                            Width="Auto"
+                                            MinWidth="80"/>
+                        <DataGridTextColumn Header="Attributes"
+                                            Binding="{Binding AttributesDisplay}"
+                                            Width="*"
+                                            MinWidth="400"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</UserControl>

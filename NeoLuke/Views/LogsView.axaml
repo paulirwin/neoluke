@@ -1,0 +1,126 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NeoLuke.ViewModels"
+             xmlns:models="using:NeoLuke.Models.Logging"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="NeoLuke.Views.LogsView"
+             x:DataType="vm:LogsViewModel">
+
+    <Design.DataContext>
+        <vm:LogsViewModel/>
+    </Design.DataContext>
+
+    <UserControl.Styles>
+        <Style Selector="DataGridRow">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style Selector="DataGridRow /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="Transparent"/>
+        </Style>
+        <!-- Color code rows by log level -->
+        <Style Selector="DataGridRow[IsSelected=False] TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="20" RowSpacing="10">
+
+        <!-- Top Toolbar: Filters and Actions -->
+        <Border Grid.Row="0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+                <TextBlock Grid.Column="0"
+                           Text="Log Level:"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,0"/>
+                <ComboBox Grid.Column="1"
+                          ItemsSource="{Binding AvailableLogLevels}"
+                          SelectedItem="{Binding MinimumLogLevel}"
+                          MinWidth="150"
+                          x:CompileBindings="False"/>
+
+                <StackPanel Grid.Column="3"
+                            Orientation="Horizontal"
+                            Spacing="10">
+                    <Button Content="Copy to Clipboard"
+                            Command="{Binding CopyLogsCommand}"
+                            Padding="10,5"/>
+                    <Button Content="Clear Logs"
+                            Command="{Binding ClearLogsCommand}"
+                            Padding="10,5"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Logs DataGrid -->
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="5">
+            <DataGrid x:Name="LogsDataGrid"
+                      ItemsSource="{Binding FilteredLogs}"
+                      SelectedItem="{Binding SelectedLogEntry}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      GridLinesVisibility="Horizontal"
+                      HeadersVisibility="Column"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="False"
+                      SelectionMode="Single"
+                      x:CompileBindings="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Timestamp"
+                                        Binding="{Binding FormattedTimestamp}"
+                                        Width="200"
+                                        MinWidth="170"/>
+                    <DataGridTextColumn Header="Level"
+                                        Binding="{Binding LogLevelShort}"
+                                        Width="90"
+                                        MinWidth="80"/>
+                    <DataGridTemplateColumn Header="Message"
+                                            Width="*"
+                                            MinWidth="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="models:LogEntry">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="{Binding FirstLine}"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding AdditionalLinesIndicator}"
+                                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                               FontStyle="Italic"
+                                               VerticalAlignment="Center"
+                                               IsVisible="{Binding HasMultipleLines}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- Bottom Toolbar: Status -->
+        <Border Grid.Row="2"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15">
+            <TextBlock VerticalAlignment="Center"
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}">
+                <Run Text="Total Logs: "/>
+                <Run Text="{Binding AllLogs.Count, FallbackValue=0}"/>
+                <Run Text=" | Filtered: "/>
+                <Run Text="{Binding FilteredLogs.Count, FallbackValue=0}"/>
+            </TextBlock>
+        </Border>
+
+    </Grid>
+
+</UserControl>

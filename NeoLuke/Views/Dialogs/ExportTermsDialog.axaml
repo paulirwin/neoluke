@@ -1,0 +1,123 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NeoLuke.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
+        x:Class="NeoLuke.Views.Dialogs.ExportTermsDialog"
+        x:DataType="vm:ExportTermsDialogViewModel"
+        Title="Export Terms"
+        Width="600" Height="500"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Design.DataContext>
+        <vm:ExportTermsDialogViewModel/>
+    </Design.DataContext>
+
+    <DockPanel Margin="20">
+        <!-- Header Section -->
+        <StackPanel DockPanel.Dock="Top" Spacing="15" Margin="0,0,0,20">
+            <!-- Index Path -->
+            <StackPanel Spacing="5">
+                <TextBlock Text="Index Path:" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding IndexPath}"
+                          TextTrimming="CharacterEllipsis"
+                          ToolTip.Tip="{Binding IndexPath}"/>
+            </StackPanel>
+
+            <!-- Field Selection -->
+            <StackPanel Spacing="5">
+                <TextBlock Text="Field:" FontWeight="SemiBold"/>
+                <ComboBox ItemsSource="{Binding FieldNames}"
+                         SelectedItem="{Binding SelectedField}"
+                         IsEnabled="{Binding !IsExporting}"
+                         HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <!-- Output Directory -->
+            <StackPanel Spacing="5">
+                <TextBlock Text="Output Directory:" FontWeight="SemiBold"/>
+                <DockPanel>
+                    <Button DockPanel.Dock="Right"
+                           Content="Browse..."
+                           Command="{Binding BrowseCommand}"
+                           IsEnabled="{Binding !IsExporting}"
+                           Margin="5,0,0,0"
+                           Width="100"/>
+                    <TextBox Text="{Binding OutputDirectory}"
+                            IsReadOnly="True"
+                            Background="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+                </DockPanel>
+            </StackPanel>
+
+            <!-- Delimiter Selection -->
+            <StackPanel Spacing="5">
+                <TextBlock Text="Delimiter:" FontWeight="SemiBold"/>
+                <ComboBox ItemsSource="{Binding DelimiterOptions}"
+                         SelectedItem="{Binding SelectedDelimiter}"
+                         IsEnabled="{Binding !IsExporting}"
+                         HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Description}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Status Section -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+            <TextBlock Text="Status:" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center"/>
+            <ProgressBar IsIndeterminate="True"
+                        Width="100"
+                        Height="20"
+                        IsVisible="{Binding IsExporting}"/>
+        </StackPanel>
+
+        <!-- Success Message -->
+        <Border DockPanel.Dock="Top"
+                Background="{DynamicResource SystemAccentColorLight1}"
+                Padding="10"
+                Margin="0,0,0,10"
+                CornerRadius="5"
+                IsVisible="{Binding ShowSuccessMessage}">
+            <StackPanel Spacing="5">
+                <TextBlock Text="Export Complete!" FontWeight="Bold"/>
+                <TextBlock TextWrapping="Wrap" Text="{Binding SuccessMessage}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Error Message -->
+        <Border DockPanel.Dock="Top"
+                Background="#D32F2F"
+                Padding="10"
+                Margin="0,0,0,10"
+                CornerRadius="5"
+                IsVisible="{Binding ShowErrorMessage}">
+            <StackPanel Spacing="5">
+                <TextBlock Text="Export Failed" FontWeight="Bold" Foreground="White"/>
+                <TextBlock TextWrapping="Wrap" Text="{Binding ErrorMessage}" Foreground="White"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Buttons -->
+        <StackPanel DockPanel.Dock="Bottom"
+                   Orientation="Horizontal"
+                   Spacing="10"
+                   HorizontalAlignment="Right">
+            <Button Content="Export"
+                    Command="{Binding ExportCommand}"
+                    IsEnabled="{Binding CanExport}"
+                    Width="100"/>
+            <Button Name="CloseButton"
+                    Content="Close"
+                    Width="100"/>
+        </StackPanel>
+
+        <!-- Spacer -->
+        <Panel/>
+    </DockPanel>
+</Window>

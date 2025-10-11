@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="NeoLuke.Tests.Integration/NeoLuke.Tests.Integration.csproj" />
+  <Project Path="NeoLuke.Tests/NeoLuke.Tests.csproj" />
+  <Project Path="NeoLuke/NeoLuke.csproj" />
+</Solution>

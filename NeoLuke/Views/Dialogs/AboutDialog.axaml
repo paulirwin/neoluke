@@ -1,0 +1,79 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NeoLuke.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="400"
+        x:Class="NeoLuke.Views.Dialogs.AboutDialog"
+        x:DataType="vm:AboutDialogViewModel"
+        Title="About NeoLuke"
+        Width="500"
+        Height="400"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Design.DataContext>
+        <vm:AboutDialogViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="30">
+        <!-- Content -->
+        <StackPanel Spacing="20" VerticalAlignment="Center">
+            <!-- App Name -->
+            <TextBlock Text="NeoLuke"
+                      FontSize="32"
+                      FontWeight="Bold"
+                      HorizontalAlignment="Center"/>
+
+            <!-- Subtitle -->
+            <TextBlock Text="Lucene.NET Toolbox"
+                      FontSize="18"
+                      HorizontalAlignment="Center"
+                      Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+
+            <Separator Margin="0,10"/>
+
+            <!-- Version Information -->
+            <StackPanel Spacing="10">
+                <TextBlock HorizontalAlignment="Center">
+                    <Run Text="App Version: "/>
+                    <Run Text="{Binding AppVersion}" FontWeight="SemiBold"/>
+                </TextBlock>
+
+                <TextBlock HorizontalAlignment="Center">
+                    <Run Text="Lucene.NET Version: "/>
+                    <Run Text="{Binding LuceneVersion}" FontWeight="SemiBold"/>
+                </TextBlock>
+            </StackPanel>
+
+            <Separator Margin="0,10"/>
+
+            <!-- Description -->
+            <TextBlock Text="A modern cross-platform desktop application for working with Apache Lucene.NET indexes."
+                      TextWrapping="Wrap"
+                      HorizontalAlignment="Center"
+                      TextAlignment="Center"
+                      MaxWidth="400"
+                      Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+
+            <!-- GitHub Link -->
+            <Button Content="https://github.com/paulirwin/neoluke"
+                   Click="OnGitHubLinkClick"
+                   HorizontalAlignment="Center"
+                   Background="Transparent"
+                   BorderThickness="0"
+                   Foreground="{DynamicResource SystemAccentColor}"
+                   Cursor="Hand"
+                   Padding="0"
+                   ToolTip.Tip="Open project on GitHub"/>
+
+            <!-- Copyright -->
+            <TextBlock HorizontalAlignment="Center"
+                      FontSize="12"
+                      Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}">
+                <Run Text="© 2025 Paul Irwin"/>
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+
+</Window>

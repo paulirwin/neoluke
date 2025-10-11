@@ -1,0 +1,138 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NeoLuke.ViewModels"
+        xmlns:views="using:NeoLuke.Views"
+        xmlns:controls="using:NeoLuke.Views.Controls"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="NeoLuke.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/neoluke-icon.png"
+        Title="NeoLuke">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="File">
+                <NativeMenu>
+                    <NativeMenuItem Header="Open Index..." Click="OnOpenIndexClick"/>
+                    <NativeMenuItem Header="Reopen current index" Click="OnReopenIndexClick"/>
+                    <NativeMenuItem Header="Reopen current index as read/write" Click="OnReopenToggleModeClick"/>
+                    <NativeMenuItem Header="Close Index" Click="OnCloseIndexClick"/>
+                </NativeMenu>
+            </NativeMenuItem>
+            <NativeMenuItem Header="View">
+                <NativeMenu>
+                    <NativeMenuItem Header="Light Mode" Click="OnLightModeClick"/>
+                    <NativeMenuItem Header="Dark Mode" Click="OnDarkModeClick"/>
+                    <NativeMenuItemSeparator/>
+                    <NativeMenuItem Header="Use System Theme" Click="OnSystemThemeClick"/>
+                </NativeMenu>
+            </NativeMenuItem>
+            <NativeMenuItem Header="Tools">
+                <NativeMenu>
+                    <NativeMenuItem Header="Optimize Index..." Click="OnOptimizeIndexClick"/>
+                    <NativeMenuItem Header="Check Index..." Click="OnCheckIndexClick"/>
+                    <NativeMenuItem Header="Export Terms..." Click="OnExportTermsClick"/>
+                </NativeMenu>
+            </NativeMenuItem>
+            <NativeMenuItem Header="Help">
+                <NativeMenu>
+                    <NativeMenuItem Header="Third-Party Notices..." Click="OnThirdPartyNoticesClick"/>
+                    <NativeMenuItem Header="About NeoLuke..." Click="OnAboutClick"/>
+                </NativeMenu>
+            </NativeMenuItem>
+        </NativeMenu>
+    </NativeMenu.Menu>
+
+    <Window.Styles>
+        <Style Selector="TabItem">
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </Window.Styles>
+
+    <DockPanel>
+        <!-- NativeMenuBar automatically shows as regular menu on Windows, hidden on macOS -->
+        <NativeMenuBar DockPanel.Dock="Top"/>
+
+        <!-- Main content -->
+        <TabControl x:Name="MainTabControl">
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <controls:ThemedIcon IconPath="avares://NeoLuke/Assets/chart-bar.svg" IconWidth="16" IconHeight="16"/>
+                    <TextBlock Text="Overview"/>
+                </StackPanel>
+            </TabItem.Header>
+            <views:OverviewView x:Name="OverviewView"/>
+        </TabItem>
+
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <controls:ThemedIcon IconPath="avares://NeoLuke/Assets/file-alt.svg" IconWidth="16" IconHeight="16"/>
+                    <TextBlock Text="Documents"/>
+                </StackPanel>
+            </TabItem.Header>
+            <views:DocumentsView x:Name="DocumentsView"/>
+        </TabItem>
+
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <controls:ThemedIcon IconPath="avares://NeoLuke/Assets/magnifying-glass.svg" IconWidth="16" IconHeight="16"/>
+                    <TextBlock Text="Search"/>
+                </StackPanel>
+            </TabItem.Header>
+            <views:SearchView x:Name="SearchView"/>
+        </TabItem>
+
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <controls:ThemedIcon IconPath="avares://NeoLuke/Assets/heart.svg" IconWidth="16" IconHeight="16"/>
+                    <TextBlock Text="More Like This"/>
+                </StackPanel>
+            </TabItem.Header>
+            <views:MoreLikeThisView x:Name="MoreLikeThisView"/>
+        </TabItem>
+
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <controls:ThemedIcon IconPath="avares://NeoLuke/Assets/flask.svg" IconWidth="16" IconHeight="16"/>
+                    <TextBlock Text="Analysis"/>
+                </StackPanel>
+            </TabItem.Header>
+            <views:AnalysisView x:Name="AnalysisView"/>
+        </TabItem>
+
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <controls:ThemedIcon IconPath="avares://NeoLuke/Assets/code-commit.svg" IconWidth="16" IconHeight="16"/>
+                    <TextBlock Text="Commits"/>
+                </StackPanel>
+            </TabItem.Header>
+            <views:CommitsView x:Name="CommitsView"/>
+        </TabItem>
+
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <controls:ThemedIcon IconPath="avares://NeoLuke/Assets/clipboard-list.svg" IconWidth="16" IconHeight="16"/>
+                    <TextBlock Text="Logs"/>
+                </StackPanel>
+            </TabItem.Header>
+            <views:LogsView x:Name="LogsView"/>
+        </TabItem>
+        </TabControl>
+    </DockPanel>
+
+</Window>

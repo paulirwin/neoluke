@@ -1,0 +1,333 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NeoLuke.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="NeoLuke.Views.MoreLikeThisView"
+             x:DataType="vm:MoreLikeThisViewModel">
+
+    <Design.DataContext>
+        <vm:MoreLikeThisViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,5,*" Margin="20">
+
+        <!-- Configuration Section (Top Pane) -->
+        <Border Grid.Row="0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15"
+                MinHeight="200">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="15">
+                    <!-- Document ID and Search Button -->
+                    <Grid Grid.Row="0" ColumnDefinitions="120,150,20,Auto,*" ColumnSpacing="10">
+                        <TextBlock Grid.Column="0"
+                                  Text="Document ID:"
+                                  VerticalAlignment="Center"/>
+                        <NumericUpDown Grid.Column="1"
+                                      Value="{Binding DocumentId}"
+                                      Minimum="0"
+                                      FormatString="N0"
+                                      IsEnabled="{Binding IsIndexLoaded}"/>
+                        <Button Grid.Column="3"
+                               Content="Find Similar"
+                               Command="{Binding SearchCommand}"
+                               Padding="20,8"
+                               IsEnabled="{Binding !IsSearching}"/>
+                        <ProgressBar Grid.Column="4"
+                                    IsIndeterminate="True"
+                                    Width="150"
+                                    Height="8"
+                                    IsVisible="{Binding IsSearching}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    Margin="10,0,0,0"/>
+                    </Grid>
+
+                    <!-- MLT Parameters Section -->
+                    <TextBlock Grid.Row="1"
+                              Text="More Like This Parameters"
+                              FontWeight="SemiBold"
+                              FontSize="13"
+                              Margin="0,5,0,0"/>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="30" RowSpacing="10">
+                        <!-- Row 1 -->
+                        <!-- Min Doc Freq -->
+                        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="Min doc freq:"
+                                      VerticalAlignment="Center"
+                                      Width="120"
+                                      ToolTip.Tip="Minimum document frequency"/>
+                            <NumericUpDown Value="{Binding MinDocFreq}"
+                                          Minimum="0"
+                                          Width="150"
+                                          FormatString="N0"
+                                          IsEnabled="{Binding IsIndexLoaded}"/>
+                        </StackPanel>
+
+                        <!-- Max Doc Freq -->
+                        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="Max doc freq:"
+                                      VerticalAlignment="Center"
+                                      Width="120"
+                                      ToolTip.Tip="Maximum document frequency"/>
+                            <NumericUpDown Value="{Binding MaxDocFreq}"
+                                          Minimum="0"
+                                          Width="150"
+                                          FormatString="N0"
+                                          IsEnabled="{Binding IsIndexLoaded}"/>
+                        </StackPanel>
+
+                        <!-- Min Term Freq -->
+                        <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="Min term freq:"
+                                      VerticalAlignment="Center"
+                                      Width="120"
+                                      ToolTip.Tip="Minimum term frequency"/>
+                            <NumericUpDown Value="{Binding MinTermFreq}"
+                                          Minimum="0"
+                                          Width="150"
+                                          FormatString="N0"
+                                          IsEnabled="{Binding IsIndexLoaded}"/>
+                        </StackPanel>
+
+                        <!-- Max Query Terms -->
+                        <StackPanel Grid.Column="3" Grid.Row="0" Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="Max query terms:"
+                                      VerticalAlignment="Center"
+                                      Width="130"
+                                      ToolTip.Tip="Maximum number of query terms"/>
+                            <NumericUpDown Value="{Binding MaxQueryTerms}"
+                                          Minimum="1"
+                                          Width="150"
+                                          FormatString="N0"
+                                          IsEnabled="{Binding IsIndexLoaded}"/>
+                        </StackPanel>
+
+                        <!-- Row 2 -->
+                        <!-- Min Word Length -->
+                        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="Min word len:"
+                                      VerticalAlignment="Center"
+                                      Width="120"
+                                      ToolTip.Tip="Minimum word length"/>
+                            <NumericUpDown Value="{Binding MinWordLen}"
+                                          Minimum="0"
+                                          Width="150"
+                                          FormatString="N0"
+                                          IsEnabled="{Binding IsIndexLoaded}"/>
+                        </StackPanel>
+
+                        <!-- Max Word Length -->
+                        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="Max word len:"
+                                      VerticalAlignment="Center"
+                                      Width="120"
+                                      ToolTip.Tip="Maximum word length (0 = no limit)"/>
+                            <NumericUpDown Value="{Binding MaxWordLen}"
+                                          Minimum="0"
+                                          Width="150"
+                                          FormatString="N0"
+                                          IsEnabled="{Binding IsIndexLoaded}"/>
+                        </StackPanel>
+
+                        <!-- Boost Factor -->
+                        <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="Boost factor:"
+                                      VerticalAlignment="Center"
+                                      Width="120"
+                                      ToolTip.Tip="Boost factor multiplier"/>
+                            <NumericUpDown Value="{Binding BoostFactor}"
+                                          Minimum="0.1"
+                                          Maximum="10"
+                                          Increment="0.1"
+                                          Width="150"
+                                          FormatString="F1"
+                                          IsEnabled="{Binding IsIndexLoaded}"/>
+                        </StackPanel>
+
+                        <!-- Boost Checkbox -->
+                        <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal" Spacing="10">
+                            <CheckBox Content="Enable boost"
+                                     IsChecked="{Binding Boost}"
+                                     IsEnabled="{Binding IsIndexLoaded}"
+                                     VerticalAlignment="Center"
+                                     ToolTip.Tip="Apply boost factor to terms"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Analyzer Selection -->
+                    <StackPanel Grid.Row="3" Orientation="Horizontal">
+                        <TextBlock Text="Analyzer:"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,10,0"/>
+                        <ComboBox ItemsSource="{Binding AnalyzerNames}"
+                                 SelectedItem="{Binding SelectedAnalyzer}"
+                                 MinWidth="200"
+                                 Width="200"
+                                 IsEnabled="{Binding IsIndexLoaded}"/>
+                    </StackPanel>
+
+                    <!-- Fields Selection Section -->
+                    <StackPanel Grid.Row="4" Spacing="10">
+                        <TextBlock Text="Fields to Analyze"
+                                  FontWeight="SemiBold"
+                                  FontSize="13"
+                                  Margin="0,5,0,0"/>
+                        <TextBlock Text="Select which fields to use when generating the More Like This query."
+                                  FontSize="11"
+                                  Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                  TextWrapping="Wrap"/>
+                        <CheckBox Content="Select all fields"
+                                 IsChecked="{Binding SelectAllFields}"
+                                 IsEnabled="{Binding IsIndexLoaded}"
+                                 Margin="0,5,0,5"/>
+                        <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                               BorderThickness="1"
+                               CornerRadius="4"
+                               MaxHeight="150">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding FieldsList}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding FieldName}"
+                                                     IsChecked="{Binding IsSelected}"
+                                                     Margin="5,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Parsed Query (Read-only) -->
+                    <Grid Grid.Row="5" ColumnDefinitions="120,*" ColumnSpacing="10">
+                        <TextBlock Grid.Column="0"
+                                  Text="Generated query:"
+                                  VerticalAlignment="Top"
+                                  Margin="0,8,0,0"/>
+                        <TextBox Grid.Column="1"
+                                Text="{Binding ParsedQuery}"
+                                IsReadOnly="True"
+                                Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                                FontStyle="Italic"
+                                TextWrapping="Wrap"
+                                MaxHeight="100"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    </Grid>
+                </Grid>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Splitter -->
+        <GridSplitter Grid.Row="1"
+                      ResizeDirection="Rows"
+                      Background="Transparent"
+                      HorizontalAlignment="Stretch"/>
+
+        <!-- Search Results Section (Bottom Pane) -->
+        <Border Grid.Row="2"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15">
+            <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
+                <!-- Section Header -->
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0"
+                              Text="Similar Documents"
+                              FontWeight="SemiBold"
+                              FontSize="14"/>
+                    <TextBlock Grid.Column="1"
+                              Text="{Binding PageInfoText}"
+                              VerticalAlignment="Center"
+                              Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                </Grid>
+
+                <!-- Results DataGrid -->
+                <Panel Grid.Row="1">
+                    <!-- Show message when no index is loaded -->
+                    <TextBlock Text="Open an index to search for similar documents"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontStyle="Italic"
+                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                               IsVisible="{Binding !IsIndexLoaded}"/>
+
+                    <!-- Show DataGrid when index is loaded -->
+                    <DataGrid ItemsSource="{Binding SearchResults}"
+                              SelectedItem="{Binding SelectedResult}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column"
+                              CanUserResizeColumns="True"
+                              CanUserSortColumns="False"
+                              SelectionMode="Single"
+                              IsVisible="{Binding IsIndexLoaded}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Doc ID"
+                                                Binding="{Binding DocId}"
+                                                Width="*"
+                                                MinWidth="80"/>
+                            <DataGridTextColumn Header="Score"
+                                                Binding="{Binding Score, StringFormat='{}{0:F4}'}"
+                                                Width="*"
+                                                MinWidth="100"/>
+                            <DataGridTextColumn Header="Field Values"
+                                                Binding="{Binding FieldValues}"
+                                                Width="3*"
+                                                MinWidth="300"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Panel>
+
+                <!-- Paging Controls -->
+                <StackPanel Grid.Row="2"
+                           Orientation="Horizontal"
+                           Spacing="10"
+                           HorizontalAlignment="Center"
+                           Margin="0,10,0,0">
+                    <!-- First Page Button -->
+                    <Button Content="⏮"
+                            Command="{Binding FirstPageCommand}"
+                            ToolTip.Tip="First page"
+                            Width="36"
+                            Height="32"/>
+
+                    <!-- Previous Page Button -->
+                    <Button Content="◀"
+                            Command="{Binding PreviousPageCommand}"
+                            ToolTip.Tip="Previous page"
+                            Width="36"
+                            Height="32"/>
+
+                    <!-- Page Number Display -->
+                    <TextBlock Text="{Binding PageInfoText}"
+                               VerticalAlignment="Center"
+                               Margin="10,0"/>
+
+                    <!-- Next Page Button -->
+                    <Button Content="▶"
+                            Command="{Binding NextPageCommand}"
+                            ToolTip.Tip="Next page"
+                            Width="36"
+                            Height="32"/>
+
+                    <!-- Last Page Button -->
+                    <Button Content="⏭"
+                            Command="{Binding LastPageCommand}"
+                            ToolTip.Tip="Last page"
+                            Width="36"
+                            Height="32"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</UserControl>

@@ -1,0 +1,104 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NeoLuke.ViewModels"
+        xmlns:models="using:NeoLuke.Models.Documents"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="NeoLuke.Views.Dialogs.AddDocumentDialog"
+        x:DataType="vm:AddDocumentDialogViewModel"
+        Title="Add Document"
+        Width="900"
+        Height="600"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True">
+
+    <Design.DataContext>
+        <vm:AddDocumentDialogViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto" Margin="20" RowSpacing="15">
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0"
+                   Text="Add a new document to the index. Fill in the field names and values below."
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Margin="0,0,0,5"/>
+
+        <!-- Fields DataGrid -->
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
+            <DataGrid x:Name="FieldsDataGrid"
+                      ItemsSource="{Binding Fields}"
+                      AutoGenerateColumns="False"
+                      GridLinesVisibility="All"
+                      HeadersVisibility="Column"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="False"
+                      SelectionMode="Extended"
+                      x:CompileBindings="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Field Name"
+                                        Binding="{Binding Name}"
+                                        Width="2*"
+                                        MinWidth="150"
+                                        IsReadOnly="False"/>
+                    <DataGridTemplateColumn Header="Type"
+                                            Width="*"
+                                            MinWidth="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding Path=DataContext.AvailableFieldTypes,
+                                                        RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                          SelectedItem="{Binding FieldType}"
+                                          HorizontalAlignment="Stretch"
+                                          Margin="0"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridCheckBoxColumn Header="Stored"
+                                            Binding="{Binding IsStored}"
+                                            Width="80"
+                                            MinWidth="80"/>
+                    <DataGridTextColumn Header="Value"
+                                        Binding="{Binding Value}"
+                                        Width="3*"
+                                        MinWidth="200"
+                                        IsReadOnly="False"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- Status message -->
+        <TextBlock Grid.Row="2"
+                   Text="{Binding StatusMessage}"
+                   TextWrapping="Wrap"
+                   FontSize="12"
+                   Foreground="{Binding StatusColor}"
+                   IsVisible="{Binding HasStatusMessage}"
+                   Margin="0,5,0,0"/>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="10"
+                    Margin="0,10,0,0">
+            <Button Content="Add Document"
+                    Command="{Binding AddDocumentCommand}"
+                    Width="120"
+                    Height="32"
+                    IsDefault="True"/>
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Width="100"
+                    Height="32"
+                    IsCancel="True"/>
+        </StackPanel>
+
+    </Grid>
+
+</Window>

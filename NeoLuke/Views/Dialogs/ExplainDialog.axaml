@@ -1,0 +1,72 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NeoLuke.ViewModels"
+        xmlns:models="using:NeoLuke.Models.Search"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
+        x:Class="NeoLuke.Views.Dialogs.ExplainDialog"
+        x:DataType="vm:ExplainDialogViewModel"
+        Title="{Binding Title}"
+        Width="700"
+        Height="500"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True">
+
+    <Design.DataContext>
+        <vm:ExplainDialogViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
+            <TextBlock Text="Score explanation:"
+                      FontWeight="SemiBold"
+                      FontSize="14"/>
+            <TextBlock Text="This shows how the relevance score was calculated for this document."
+                      FontSize="12"
+                      Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+        </StackPanel>
+
+        <!-- TreeView with Explanation -->
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
+            <ScrollViewer>
+                <TreeView ItemsSource="{Binding RootNodes}"
+                         Padding="10">
+                    <TreeView.ItemTemplate>
+                        <TreeDataTemplate ItemsSource="{Binding Children}">
+                            <TextBlock Text="{Binding Text}"
+                                      TextWrapping="Wrap"
+                                      FontFamily="Consolas,Menlo,Monaco,Courier New,monospace"/>
+                        </TreeDataTemplate>
+                    </TreeView.ItemTemplate>
+                    <TreeView.Styles>
+                        <Style Selector="TreeViewItem">
+                            <Setter Property="IsExpanded" Value="True"/>
+                        </Style>
+                    </TreeView.Styles>
+                </TreeView>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2"
+                   Orientation="Horizontal"
+                   HorizontalAlignment="Right"
+                   Spacing="10"
+                   Margin="0,15,0,0">
+            <Button Content="Copy to Clipboard"
+                   Click="OnCopyClick"
+                   Width="150"
+                   Height="32"/>
+            <Button Content="Close"
+                   Click="OnCloseClick"
+                   Width="100"
+                   Height="32"/>
+        </StackPanel>
+    </Grid>
+
+</Window>

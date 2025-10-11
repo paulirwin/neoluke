@@ -1,0 +1,28 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="NeoLuke.App"
+             xmlns:local="using:NeoLuke"
+             xmlns:converters="using:NeoLuke.Converters"
+             Name="NeoLuke"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="About NeoLuke" Click="OnAboutClick"/>
+        </NativeMenu>
+    </NativeMenu.Menu>
+
+    <Application.Resources>
+        <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+    </Application.Resources>
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+  
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+    </Application.Styles>
+</Application>

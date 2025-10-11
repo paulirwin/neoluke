@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationName>NeoLuke</ApplicationName>
+    <Product>NeoLuke</Product>
+    <ApplicationIcon>Assets\neoluke-icon.ico</ApplicationIcon>
+    <CFBundleName>NeoLuke</CFBundleName>
+    <CFBundleDisplayName>NeoLuke</CFBundleDisplayName>
+    <CFBundleIconFile>Assets\neoluke-icon.png</CFBundleIconFile>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <AvaloniaResource Include="Assets\**" />
+    <EmbeddedResource Include="THIRD-PARTY-NOTICES.TXT" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.7" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.7" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.7">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00017" />
+    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00017" />
+    <PackageReference Include="Lucene.Net.Analysis.Kuromoji" Version="4.8.0-beta00017" />
+    <PackageReference Include="Lucene.Net.Analysis.Morfologik" Version="4.8.0-beta00017" />
+    <PackageReference Include="Lucene.Net.Analysis.SmartCn" Version="4.8.0-beta00017" />
+    <PackageReference Include="Lucene.Net.Analysis.Stempel" Version="4.8.0-beta00017" />
+    <PackageReference Include="Lucene.Net.Queries" Version="4.8.0-beta00017" />
+    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00017" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0-rc.1.25451.107" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.0-rc.1.25451.107" />
+    <PackageReference Include="Svg.Controls.Skia.Avalonia" Version="11.3.6.2" />
+    <PackageReference Include="Svg.Skia" Version="3.2.1" />
+    <PackageReference Include="System.Reactive" Version="6.1.0" />
+  </ItemGroup>
+
+  <Target Name="GenerateThirdPartyNotices" BeforeTargets="Pack">
+    <Exec Command="dotnet tool install --global ThirdLicense" IgnoreExitCode="true" />
+    <Exec Command="thirdlicense --project $(ProjectPath) --output $(ProjectDir)THIRD-PARTY-NOTICES.TXT" WorkingDirectory="$(ProjectDir)" />
+  </Target>
+</Project>

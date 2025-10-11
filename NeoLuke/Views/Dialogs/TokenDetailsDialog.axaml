@@ -1,0 +1,77 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NeoLuke.ViewModels"
+        xmlns:models="using:NeoLuke.Models.Analysis"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
+        x:Class="NeoLuke.Views.Dialogs.TokenDetailsDialog"
+        x:DataType="vm:TokenDetailsDialogViewModel"
+        Title="Token Attributes"
+        Width="700"
+        Height="500"
+        MinWidth="500"
+        MinHeight="300"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True">
+
+    <Design.DataContext>
+        <vm:TokenDetailsDialogViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
+            <TextBlock Text="Token Attributes"
+                      FontSize="18"
+                      FontWeight="SemiBold"/>
+            <TextBlock Text="{Binding TokenTerm, StringFormat='Term: {0}'}"
+                      FontSize="14"
+                      Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+        </StackPanel>
+
+        <!-- Attributes DataGrid -->
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
+            <DataGrid ItemsSource="{Binding AttributeDetails}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      GridLinesVisibility="Horizontal"
+                      HeadersVisibility="Column"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="True"
+                      SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Attribute"
+                                        Binding="{Binding AttributeTypeName}"
+                                        Width="Auto"
+                                        MinWidth="120"/>
+                    <DataGridTextColumn Header="Name"
+                                        Binding="{Binding PropertyName}"
+                                        Width="Auto"
+                                        MinWidth="120"/>
+                    <DataGridTextColumn Header="Value"
+                                        Binding="{Binding Value}"
+                                        Width="*"
+                                        MinWidth="200"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- Close Button -->
+        <StackPanel Grid.Row="2"
+                   Orientation="Horizontal"
+                   HorizontalAlignment="Right"
+                   Margin="0,15,0,0">
+            <Button Content="Close"
+                   Click="CloseButton_Click"
+                   Padding="20,8"
+                   MinWidth="100"/>
+        </StackPanel>
+
+    </Grid>
+
+</Window>

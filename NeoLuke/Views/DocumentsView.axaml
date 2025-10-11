@@ -1,0 +1,173 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NeoLuke.ViewModels"
+             xmlns:models="using:NeoLuke.Models.Documents"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="NeoLuke.Views.DocumentsView"
+             x:DataType="vm:DocumentsViewModel">
+
+    <Design.DataContext>
+        <vm:DocumentsViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*" Margin="20" RowSpacing="20">
+
+        <!-- Browse Documents Section -->
+        <Border Grid.Row="0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15">
+            <Grid RowDefinitions="Auto,Auto" RowSpacing="15">
+                <!-- Section Header -->
+                <TextBlock Grid.Row="0"
+                          Text="Browse documents"
+                          FontWeight="SemiBold"
+                          FontSize="14"/>
+
+                <!-- Navigation Controls -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10">
+                    <!-- First Button -->
+                    <Button Content="⏮"
+                            Command="{Binding NavigateFirstCommand}"
+                            ToolTip.Tip="First document"
+                            Width="36"
+                            Height="32"/>
+
+                    <!-- Previous Button -->
+                    <Button Content="◀"
+                            Command="{Binding NavigatePreviousCommand}"
+                            ToolTip.Tip="Previous document"
+                            Width="36"
+                            Height="32"/>
+
+                    <!-- Document Number Input -->
+                    <NumericUpDown Value="{Binding CurrentDocId}"
+                                   Minimum="0"
+                                   Maximum="{Binding MaxDocId}"
+                                   Width="150"
+                                   Height="32"
+                                   AllowSpin="True"
+                                   ShowButtonSpinner="True"
+                                   FormatString="0"
+                                   Increment="1"
+                                   x:CompileBindings="False"/>
+
+                    <!-- "of X" text -->
+                    <TextBlock Text="{Binding DocCountText}"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"/>
+
+                    <!-- Next Button -->
+                    <Button Content="▶"
+                            Command="{Binding NavigateNextCommand}"
+                            ToolTip.Tip="Next document"
+                            Width="36"
+                            Height="32"/>
+
+                    <!-- Last Button -->
+                    <Button Content="⏭"
+                            Command="{Binding NavigateLastCommand}"
+                            ToolTip.Tip="Last document"
+                            Width="36"
+                            Height="32"/>
+
+                    <!-- Separator -->
+                    <Separator Height="32" Width="1" Margin="5,0"/>
+
+                    <!-- Delete Button (wrapped in Border for tooltip on disabled state) -->
+                    <Border ToolTip.Tip="{Binding DeleteButtonTooltip}">
+                        <Button Content="Delete"
+                                Command="{Binding DeleteDocumentCommand}"
+                                Height="32"
+                                Padding="15,5"/>
+                    </Border>
+
+                    <!-- Add Document Button (wrapped in Border for tooltip on disabled state) -->
+                    <Border ToolTip.Tip="{Binding AddDocumentButtonTooltip}">
+                        <Button Content="Add Document"
+                                Command="{Binding AddDocumentCommand}"
+                                Height="32"
+                                Padding="15,5"/>
+                    </Border>
+
+                    <!-- More Like This Button -->
+                    <Button Content="More Like This"
+                            Command="{Binding MoreLikeThisCommand}"
+                            Height="32"
+                            Padding="15,5"
+                            ToolTip.Tip="Find documents similar to this one"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Document Fields Section -->
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15">
+            <Grid RowDefinitions="Auto,*">
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="Document Fields"
+                                   FontWeight="SemiBold"
+                                   FontSize="14"/>
+                        <TextBlock Text="{Binding DocumentFields.Count, StringFormat='({0} fields)'}"
+                                   FontSize="12"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                    </StackPanel>
+
+                    <Button Grid.Column="1"
+                            Content="Copy Values"
+                            Command="{Binding CopyValuesCommand}"
+                            ToolTip.Tip="Copy selected field values to clipboard"
+                            Padding="10,5"/>
+                </Grid>
+
+                <Panel Grid.Row="1">
+                    <!-- Show message when no index is loaded -->
+                    <TextBlock Text="Open an index to browse documents"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontStyle="Italic"
+                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                               IsVisible="{Binding !IsIndexLoaded}"/>
+
+                    <!-- Show DataGrid when index is loaded -->
+                    <DataGrid x:Name="FieldsDataGrid"
+                              ItemsSource="{Binding DocumentFields}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column"
+                              CanUserResizeColumns="True"
+                              CanUserSortColumns="False"
+                              SelectionMode="Extended"
+                              IsVisible="{Binding IsIndexLoaded}"
+                              x:CompileBindings="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Field Name"
+                                                Binding="{Binding FieldName}"
+                                                Width="Auto"
+                                                MinWidth="100"/>
+                            <DataGridTextColumn Header="Norm"
+                                                Binding="{Binding Norm}"
+                                                Width="Auto"
+                                                MinWidth="60"/>
+                            <DataGridTextColumn Header="Field Value"
+                                                Binding="{Binding FieldValue}"
+                                                Width="*"
+                                                MinWidth="300"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Panel>
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</UserControl>

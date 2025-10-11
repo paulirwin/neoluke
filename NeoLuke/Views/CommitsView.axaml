@@ -1,0 +1,229 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:NeoLuke.ViewModels"
+             xmlns:models="using:NeoLuke.Models.Commits"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="NeoLuke.Views.CommitsView"
+             x:DataType="vm:CommitsViewModel">
+
+    <Design.DataContext>
+        <vm:CommitsViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*" Margin="20" RowSpacing="20">
+
+        <!-- Top Section: Commit Selection and Details -->
+        <Border Grid.Row="0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15">
+            <Grid RowDefinitions="Auto,Auto" RowSpacing="15">
+                <!-- Section Header -->
+                <TextBlock Grid.Row="0"
+                          Text="Commit Details"
+                          FontWeight="SemiBold"
+                          FontSize="14"/>
+
+                <!-- Commit Selection and Info -->
+                <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto,*,Auto,*,Auto,*" ColumnSpacing="10">
+                    <!-- Generation Selector -->
+                    <TextBlock Grid.Column="0" Text="Generation:" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1"
+                             ItemsSource="{Binding Commits}"
+                             SelectedItem="{Binding SelectedCommit}"
+                             Width="120"
+                             IsEnabled="{Binding IsIndexLoaded}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="models:CommitInfo">
+                                <TextBlock Text="{Binding DisplayString}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <!-- Deleted Status -->
+                    <TextBlock Grid.Column="2" Text="Deleted:" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                    <TextBlock Grid.Column="3" Text="{Binding DeletedText}" VerticalAlignment="Center"/>
+
+                    <!-- Segment Count -->
+                    <TextBlock Grid.Column="4" Text="Segments:" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                    <TextBlock Grid.Column="5" Text="{Binding SegmentCountText}" VerticalAlignment="Center"/>
+
+                    <!-- User Data -->
+                    <TextBlock Grid.Column="6" Text="User Data:" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                    <TextBlock Grid.Column="7" Text="{Binding UserDataText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Bottom Section: Files and Segments (Split Vertically) -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto,*">
+
+            <!-- Left Side: Files -->
+            <Border Grid.Column="0"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="15">
+                <Grid RowDefinitions="Auto,*">
+                    <!-- Files Header -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                        <TextBlock Text="Files"
+                                   FontWeight="SemiBold"
+                                   FontSize="14"/>
+                        <TextBlock Text="{Binding Files.Count, StringFormat='({0} files)'}"
+                                   FontSize="12"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                    </StackPanel>
+
+                    <!-- Files DataGrid -->
+                    <Panel Grid.Row="1">
+                        <!-- Show message when no index is loaded -->
+                        <TextBlock Text="Open an index to view commits"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontStyle="Italic"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                   IsVisible="{Binding !IsIndexLoaded}"/>
+
+                        <!-- Show DataGrid when index is loaded -->
+                        <DataGrid ItemsSource="{Binding Files}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  GridLinesVisibility="Horizontal"
+                                  HeadersVisibility="Column"
+                                  CanUserResizeColumns="True"
+                                  CanUserSortColumns="False"
+                                  IsVisible="{Binding IsIndexLoaded}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Filename"
+                                                    Binding="{Binding FileName}"
+                                                    Width="2*"
+                                                    MinWidth="150"/>
+                                <DataGridTextColumn Header="Size"
+                                                    Binding="{Binding HumanReadableSize}"
+                                                    Width="*"
+                                                    MinWidth="100"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Panel>
+                </Grid>
+            </Border>
+
+            <!-- Vertical Splitter -->
+            <GridSplitter Grid.Column="1"
+                          Width="6"
+                          Background="Transparent"
+                          ResizeDirection="Columns"
+                          HorizontalAlignment="Center"/>
+
+            <!-- Right Side: Segments and Details (Split Horizontally) -->
+            <Grid Grid.Column="2" RowDefinitions="2*,Auto,*">
+
+                <!-- Top: Segments -->
+                <Border Grid.Row="0"
+                        BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="15">
+                    <Grid RowDefinitions="Auto,*">
+                        <!-- Segments Header -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                            <TextBlock Text="Segments"
+                                       FontWeight="SemiBold"
+                                       FontSize="14"/>
+                            <TextBlock Text="{Binding Segments.Count, StringFormat='({0} segments)'}"
+                                       FontSize="12"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                        </StackPanel>
+
+                        <!-- Segments DataGrid -->
+                        <DataGrid Grid.Row="1"
+                                  ItemsSource="{Binding Segments}"
+                                  SelectedItem="{Binding SelectedSegment}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  GridLinesVisibility="Horizontal"
+                                  HeadersVisibility="Column"
+                                  CanUserResizeColumns="True"
+                                  CanUserSortColumns="False"
+                                  SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name"
+                                                    Binding="{Binding Name}"
+                                                    Width="*"
+                                                    MinWidth="80"/>
+                                <DataGridTextColumn Header="Max Docs"
+                                                    Binding="{Binding MaxDocs}"
+                                                    Width="*"
+                                                    MinWidth="80"/>
+                                <DataGridTextColumn Header="Dels"
+                                                    Binding="{Binding Deletions}"
+                                                    Width="*"
+                                                    MinWidth="60"/>
+                                <DataGridTextColumn Header="Del Gen"
+                                                    Binding="{Binding DelGen}"
+                                                    Width="*"
+                                                    MinWidth="70"/>
+                                <DataGridTextColumn Header="Version"
+                                                    Binding="{Binding Version}"
+                                                    Width="*"
+                                                    MinWidth="80"/>
+                                <DataGridTextColumn Header="Codec"
+                                                    Binding="{Binding Codec}"
+                                                    Width="*"
+                                                    MinWidth="100"/>
+                                <DataGridTextColumn Header="Size"
+                                                    Binding="{Binding HumanReadableSize}"
+                                                    Width="*"
+                                                    MinWidth="80"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+
+                <!-- Horizontal Splitter -->
+                <GridSplitter Grid.Row="1"
+                              Height="6"
+                              Background="Transparent"
+                              ResizeDirection="Rows"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Stretch"/>
+
+                <!-- Bottom: Segment Details -->
+                <Border Grid.Row="2"
+                        BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="15">
+                    <Grid RowDefinitions="Auto,*">
+                        <!-- Segment Details Header -->
+                        <TextBlock Grid.Row="0"
+                                   Text="Segment Details"
+                                   FontWeight="SemiBold"
+                                   FontSize="14"
+                                   Margin="0,0,0,10"/>
+
+                        <!-- Segment Details Content -->
+                        <ScrollViewer Grid.Row="1"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto">
+                            <TextBlock Text="{Binding SegmentDetailsText}"
+                                       FontFamily="Courier New"
+                                       FontSize="12"
+                                       TextWrapping="NoWrap"/>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

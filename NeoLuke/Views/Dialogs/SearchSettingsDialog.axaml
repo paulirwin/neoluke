@@ -1,0 +1,285 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NeoLuke.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="600"
+        x:Class="NeoLuke.Views.Dialogs.SearchSettingsDialog"
+        x:DataType="vm:SearchSettingsDialogViewModel"
+        Title="Search Settings"
+        Width="700"
+        Height="600"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        MinWidth="650"
+        MinHeight="500">
+
+    <Design.DataContext>
+        <vm:SearchSettingsDialogViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="TabItem">
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="*,Auto" Margin="20">
+        <!-- Tabbed Content -->
+        <TabControl Grid.Row="0">
+            <!-- Query Parser Tab -->
+            <TabItem Header="Query Parser">
+                <ScrollViewer>
+                    <StackPanel Spacing="15" Margin="10">
+                        <!-- Default Operator -->
+                        <TextBlock Text="Default Operator"
+                                  FontWeight="SemiBold"
+                                  FontSize="14"/>
+
+                        <StackPanel Spacing="10" Margin="15,0,0,0">
+                            <RadioButton Content="OR (any term matches)"
+                                        IsChecked="{Binding DefaultOperator, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=OR}"
+                                        GroupName="DefaultOperator"/>
+                            <RadioButton Content="AND (all terms must match)"
+                                        IsChecked="{Binding DefaultOperator, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=AND}"
+                                        GroupName="DefaultOperator"/>
+                        </StackPanel>
+
+                        <Separator/>
+
+                        <!-- General Options -->
+                        <TextBlock Text="General Options"
+                                  FontWeight="SemiBold"
+                                  FontSize="14"/>
+
+                        <StackPanel Spacing="8" Margin="15,0,0,0">
+                            <CheckBox Content="Enable position increments"
+                                     IsChecked="{Binding EnablePositionIncrements}"
+                                     ToolTip.Tip="Enable position increments in phrase queries"/>
+
+                            <CheckBox Content="Allow leading wildcard"
+                                     IsChecked="{Binding AllowLeadingWildcard}"
+                                     ToolTip.Tip="Allow * or ? as first character in wildcard queries"/>
+
+                            <CheckBox Content="Split on whitespace (Classic parser only)"
+                                     IsChecked="{Binding SplitOnWhitespace}"
+                                     ToolTip.Tip="Split query text on whitespace before analyzing"/>
+
+                            <CheckBox Content="Auto-generate phrase queries (Classic parser only)"
+                                     IsChecked="{Binding AutoGeneratePhraseQueries}"
+                                     ToolTip.Tip="Automatically create phrase queries for multi-term tokens"/>
+                        </StackPanel>
+
+                        <Separator/>
+
+                        <!-- Phrase Query Settings -->
+                        <TextBlock Text="Phrase Query Settings"
+                                  FontWeight="SemiBold"
+                                  FontSize="14"/>
+
+                        <StackPanel Spacing="10" Margin="15,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Phrase slop (default distance between terms):"
+                                          Margin="0,0,0,5"/>
+                                <NumericUpDown Value="{Binding PhraseSlop}"
+                                              Minimum="0"
+                                              Maximum="100"
+                                              Width="150"
+                                              HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Separator/>
+
+                        <!-- Fuzzy Query Settings -->
+                        <TextBlock Text="Fuzzy Query Settings"
+                                  FontWeight="SemiBold"
+                                  FontSize="14"/>
+
+                        <StackPanel Spacing="10" Margin="15,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Minimum similarity (0.0-1.0 or edit distance >= 1):"
+                                          Margin="0,0,0,5"/>
+                                <NumericUpDown Value="{Binding FuzzyMinSim}"
+                                              Minimum="0"
+                                              Maximum="10"
+                                              Increment="0.1"
+                                              FormatString="F1"
+                                              Width="150"
+                                              HorizontalAlignment="Left"/>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="Prefix length (characters that must match exactly):"
+                                          Margin="0,0,0,5"/>
+                                <NumericUpDown Value="{Binding FuzzyPrefixLength}"
+                                              Minimum="0"
+                                              Maximum="10"
+                                              Width="150"
+                                              HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Separator/>
+
+                        <!-- Date Range Query Settings -->
+                        <TextBlock Text="Date Range Query Settings"
+                                  FontWeight="SemiBold"
+                                  FontSize="14"/>
+
+                        <StackPanel Spacing="10" Margin="15,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Date resolution:"
+                                          Margin="0,0,0,5"/>
+                                <ComboBox ItemsSource="{Binding AvailableDateResolutions}"
+                                         SelectedItem="{Binding SelectedDateResolution}"
+                                         Width="200"
+                                         HorizontalAlignment="Left"/>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="Locale (culture name, e.g., en-US):"
+                                          Margin="0,0,0,5"/>
+                                <Grid ColumnDefinitions="*,Auto" MaxWidth="400" HorizontalAlignment="Left">
+                                    <TextBox Grid.Column="0"
+                                            Text="{Binding LocaleName}"
+                                            Watermark="en-US"/>
+                                    <Button Grid.Column="1"
+                                           Content="Reset to default"
+                                           Click="OnResetLocaleClick"
+                                           Margin="5,0,0,0"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="Time zone ID (e.g., America/New_York):"
+                                          Margin="0,0,0,5"/>
+                                <Grid ColumnDefinitions="*,Auto" Width="550" HorizontalAlignment="Left">
+                                    <TextBox Grid.Column="0"
+                                            Text="{Binding TimeZoneId}"
+                                            Watermark="Local time zone"
+                                            MinWidth="350"/>
+                                    <Button Grid.Column="1"
+                                           Content="Reset to default"
+                                           Click="OnResetTimeZoneClick"
+                                           Margin="5,0,0,0"/>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Similarity Tab -->
+            <TabItem Header="Similarity">
+                <ScrollViewer>
+                    <StackPanel Spacing="15" Margin="10">
+                        <!-- Similarity Type Selection -->
+                        <TextBlock Text="Similarity Scoring Algorithm"
+                                  FontWeight="SemiBold"
+                                  FontSize="14"/>
+
+                        <StackPanel Spacing="10" Margin="15,0,0,0">
+                            <RadioButton Content="BM25 Similarity (default)"
+                                        IsChecked="{Binding SelectedSimilarityType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=BM25}"
+                                        GroupName="SimilarityType"/>
+                            <TextBlock Text="Modern relevance scoring based on Okapi BM25. Default in Lucene 6+."
+                                      Margin="30,0,0,5"
+                                      TextWrapping="Wrap"
+                                      Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                      FontSize="12"/>
+
+                            <RadioButton Content="Classic TF-IDF Similarity"
+                                        IsChecked="{Binding SelectedSimilarityType, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Classic}"
+                                        GroupName="SimilarityType"
+                                        Margin="0,10,0,0"/>
+                            <TextBlock Text="Traditional term frequency-inverse document frequency scoring."
+                                      Margin="30,0,0,0"
+                                      TextWrapping="Wrap"
+                                      Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                      FontSize="12"/>
+                        </StackPanel>
+
+                        <Separator/>
+
+                        <!-- BM25 Parameters -->
+                        <TextBlock Text="BM25 Parameters"
+                                  FontWeight="SemiBold"
+                                  FontSize="14"/>
+
+                        <StackPanel Spacing="10" Margin="15,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="k1 (term frequency saturation, default 1.2):"
+                                          Margin="0,0,0,5"/>
+                                <TextBlock Text="Controls non-linear term frequency normalization. Higher values give more weight to term frequency."
+                                          TextWrapping="Wrap"
+                                          FontSize="11"
+                                          Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                          Margin="0,0,0,5"/>
+                                <NumericUpDown Value="{Binding Bm25K1}"
+                                              Minimum="0"
+                                              Maximum="10"
+                                              Increment="0.1"
+                                              FormatString="F2"
+                                              Width="150"
+                                              HorizontalAlignment="Left"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Text="b (length normalization, default 0.75):"
+                                          Margin="0,0,0,5"/>
+                                <TextBlock Text="Controls document length normalization. 0=no normalization, 1=full normalization."
+                                          TextWrapping="Wrap"
+                                          FontSize="11"
+                                          Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                          Margin="0,0,0,5"/>
+                                <NumericUpDown Value="{Binding Bm25B}"
+                                              Minimum="0"
+                                              Maximum="1"
+                                              Increment="0.05"
+                                              FormatString="F2"
+                                              Width="150"
+                                              HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Separator/>
+
+                        <!-- Common Options -->
+                        <TextBlock Text="Common Options"
+                                  FontWeight="SemiBold"
+                                  FontSize="14"/>
+
+                        <StackPanel Spacing="8" Margin="15,0,0,0">
+                            <CheckBox Content="Discount overlaps"
+                                     IsChecked="{Binding DiscountOverlaps}"
+                                     ToolTip.Tip="Whether overlap tokens (position increment 0) are discounted from document length"/>
+                            <TextBlock Text="When enabled, tokens with position increment of zero (e.g., synonyms) are ignored when computing norms."
+                                      TextWrapping="Wrap"
+                                      FontSize="11"
+                                      Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                      Margin="25,0,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="1"
+                   Orientation="Horizontal"
+                   HorizontalAlignment="Right"
+                   Spacing="10"
+                   Margin="0,20,0,0">
+            <Button Content="OK"
+                   Click="OnOkClick"
+                   Width="100"
+                   Height="32"/>
+            <Button Content="Cancel"
+                   Click="OnCancelClick"
+                   Width="100"
+                   Height="32"/>
+        </StackPanel>
+    </Grid>
+
+</Window>
