@@ -5,6 +5,8 @@
 A modern, cross-platform desktop GUI application for exploring and managing Apache Lucene.NET indexes. 
 NeoLuke provides a clean, intuitive interface for developers and search engineers working with Lucene.NET or supported Lucene indexes.
 
+<img width="2696" height="1726" alt="NeoLuke Screenshot" src="https://github.com/user-attachments/assets/69afda4f-52bc-49e1-862c-a0ee7d2c5d1d" />
+
 ## Features
 
 - **Index Overview**: View index statistics, segment information, and field details
@@ -178,4 +180,5 @@ This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) f
 - Powered by [Lucene.NET](https://lucenenet.apache.org/)
 
 [![Lucene.NET](https://raw.githubusercontent.com/apache/lucenenet/refs/heads/master/branding/logo/lucene-net-badge-180x36.png)](https://github.com/apache/lucenenet)
+
 
