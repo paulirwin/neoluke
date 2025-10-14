@@ -1,5 +1,7 @@
 # NeoLuke: Lucene.NET Toolbox
 
+[![.NET CI](https://github.com/paulirwin/neoluke/actions/workflows/dotnet.yml/badge.svg)](https://github.com/paulirwin/neoluke/actions/workflows/dotnet.yml)
+
 A modern, cross-platform desktop GUI application for exploring and managing Apache Lucene.NET indexes. 
 NeoLuke provides a clean, intuitive interface for developers and search engineers working with Lucene.NET or supported Lucene indexes.
 
@@ -174,4 +176,6 @@ This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) f
 - Inspired by [Apache Lucene's Luke](https://github.com/apache/lucene/tree/main/lucene/luke) tool
 - Built with [Avalonia UI](https://avaloniaui.net/)
 - Powered by [Lucene.NET](https://lucenenet.apache.org/)
+
+[![Lucene.NET](https://raw.githubusercontent.com/apache/lucenenet/refs/heads/master/branding/logo/lucene-net-badge-180x36.png)](https://github.com/apache/lucenenet)
 
