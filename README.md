@@ -17,7 +17,7 @@ NeoLuke provides a clean, intuitive interface for developers and search engineer
 
 ## Requirements
 
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) or later
 
 ## Quick Start
 
@@ -174,3 +174,4 @@ This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) f
 - Inspired by [Apache Lucene's Luke](https://github.com/apache/lucene/tree/main/lucene/luke) tool
 - Built with [Avalonia UI](https://avaloniaui.net/)
 - Powered by [Lucene.NET](https://lucenenet.apache.org/)
+
