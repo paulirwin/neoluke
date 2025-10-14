@@ -35,18 +35,29 @@ public class AnalysisModel
         using var stringReader = new StringReader(inputText);
         using var tokenStream = analyzer.GetTokenStream("field", stringReader);
 
-        // Get token attributes
+        // Get token attributes - check if they exist first
+        // Some attributes are required, others are optional
         var termAttr = tokenStream.GetAttribute<ICharTermAttribute>();
         var offsetAttr = tokenStream.GetAttribute<IOffsetAttribute>();
-        var posIncrAttr = tokenStream.GetAttribute<IPositionIncrementAttribute>();
-        var typeAttr = tokenStream.GetAttribute<ITypeAttribute>();
+
+        // Optional attributes - not all analyzers provide these
+        var hasPositionIncrement = tokenStream.HasAttribute<IPositionIncrementAttribute>();
+        var posIncrAttr = hasPositionIncrement
+            ? tokenStream.GetAttribute<IPositionIncrementAttribute>()
+            : null;
+
+        var hasTypeAttribute = tokenStream.HasAttribute<ITypeAttribute>();
+        var typeAttr = hasTypeAttribute
+            ? tokenStream.GetAttribute<ITypeAttribute>()
+            : null;
 
         tokenStream.Reset();
 
         int position = -1;
         while (tokenStream.IncrementToken())
         {
-            position += posIncrAttr.PositionIncrement;
+            // Use position increment if available, otherwise default to 1
+            position += posIncrAttr?.PositionIncrement ?? 1;
 
             // Collect all attributes for this token
             var attributes = new Dictionary<string, string>
@@ -55,7 +66,7 @@ public class AnalysisModel
                 ["position"] = position.ToString(),
                 ["startOffset"] = offsetAttr.StartOffset.ToString(),
                 ["endOffset"] = offsetAttr.EndOffset.ToString(),
-                ["type"] = typeAttr.Type
+                ["type"] = typeAttr?.Type ?? "word"
             };
 
             // Capture detailed attribute information for the details dialog
@@ -125,7 +136,7 @@ public class AnalysisModel
                 Position = position,
                 StartOffset = offsetAttr.StartOffset,
                 EndOffset = offsetAttr.EndOffset,
-                Type = typeAttr.Type,
+                Type = typeAttr?.Type ?? "word",
                 Attributes = attributes,
                 DetailedAttributes = detailedAttributes
             });
