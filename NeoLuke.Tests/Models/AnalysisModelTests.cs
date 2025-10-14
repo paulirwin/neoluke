@@ -331,4 +331,25 @@ public class AnalysisModelTests
             Assert.NotEmpty(token.Type);
         });
     }
+
+    [Fact]
+    public void AnalyzeText_WithSimpleAnalyzer_HandlesAnalyzerWithoutPositionIncrementAttribute()
+    {
+        // Arrange
+        var model = new AnalysisModel();
+        var analyzerType = typeof(SimpleAnalyzer);
+        var inputText = "Hello World Test";
+
+        // Act
+        var tokens = model.AnalyzeText(analyzerType, inputText);
+
+        // Assert
+        // SimpleAnalyzer doesn't provide IPositionIncrementAttribute
+        // The code should handle this gracefully and still produce tokens
+        Assert.NotEmpty(tokens);
+        Assert.Equal(3, tokens.Count);
+        Assert.Equal("hello", tokens[0].Term);
+        Assert.Equal("world", tokens[1].Term);
+        Assert.Equal("test", tokens[2].Term);
+    }
 }
