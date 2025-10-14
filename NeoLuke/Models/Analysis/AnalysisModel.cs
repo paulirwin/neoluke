@@ -41,13 +41,11 @@ public class AnalysisModel
         var offsetAttr = tokenStream.GetAttribute<IOffsetAttribute>();
 
         // Optional attributes - not all analyzers provide these
-        var hasPositionIncrement = tokenStream.HasAttribute<IPositionIncrementAttribute>();
-        var posIncrAttr = hasPositionIncrement
+        var posIncrAttr = tokenStream.HasAttribute<IPositionIncrementAttribute>()
             ? tokenStream.GetAttribute<IPositionIncrementAttribute>()
             : null;
 
-        var hasTypeAttribute = tokenStream.HasAttribute<ITypeAttribute>();
-        var typeAttr = hasTypeAttribute
+        var typeAttr = tokenStream.HasAttribute<ITypeAttribute>()
             ? tokenStream.GetAttribute<ITypeAttribute>()
             : null;
 
